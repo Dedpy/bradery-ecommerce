@@ -6,6 +6,7 @@ services:
       - 3001:3000
     depends_on:
       - db
+      - cache
     environment:
       - TYPEORM_HOST=db
       - TYPEORM_PORT=3306
@@ -27,3 +28,7 @@ services:
       MYSQL_DATABASE: ecommerce
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+  cache:
+    image: redis:latest
+    ports:
+      - 6379:6379
