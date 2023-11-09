@@ -1,6 +1,8 @@
 [submodule "backend-service-ecommerce"]
 	path = backend-service-ecommerce
 	url = https://github.com/Dedpy/backend-service-ecommerce.git
+	branch = docker
 [submodule "frontend-service-ecommerce"]
 	path = frontend-service-ecommerce
 	url = https://github.com/Dedpy/frontend-service-ecommerce.git
+	branch = docker

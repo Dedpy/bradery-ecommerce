@@ -1,0 +1,29 @@
+version: "3"
+services:
+  backend:
+    build: ./backend-service-ecommerce
+    ports:
+      - 3001:3000
+    depends_on:
+      - db
+    environment:
+      - TYPEORM_HOST=db
+      - TYPEORM_PORT=3306
+      - TYPEORM_USERNAME=root
+      - TYPEORM_PASSWORD=
+      - TYPEORM_DATABASE=bradery
+      - REDIS_URL=redis://cache:6379
+      - REDIS_HOST=cache
+  frontend:
+    build: ./frontend-service-ecommerce
+    ports:
+      - 3000:3000
+    environment:
+      - API_URL=http://backend:3001
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
