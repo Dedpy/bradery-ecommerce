@@ -1,9 +1,30 @@
 version: "3"
 services:
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - default
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+  cache:
+    image: redis:latest
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - 6379:6379
   backend:
     build: ./backend-service-ecommerce
     ports:
       - 3001:3000
+    restart: unless-stopped
+    networks:
+      - default
     depends_on:
       - db
       - cache
@@ -11,7 +32,7 @@ services:
       - TYPEORM_HOST=db
       - TYPEORM_PORT=3306
       - TYPEORM_USERNAME=root
-      - TYPEORM_PASSWORD=
+      - TYPEORM_PASSWORD=root
       - TYPEORM_DATABASE=bradery
       - REDIS_URL=redis://cache:6379
       - REDIS_HOST=cache
@@ -21,14 +42,5 @@ services:
       - 3000:3000
     environment:
       - API_URL=http://backend:3001
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ecommerce
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-  cache:
-    image: redis:latest
-    ports:
-      - 6379:6379
+    networks:
+      - default
