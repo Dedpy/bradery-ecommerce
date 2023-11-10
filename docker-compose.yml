@@ -4,6 +4,8 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
     networks:
       - server-network
     environment:
