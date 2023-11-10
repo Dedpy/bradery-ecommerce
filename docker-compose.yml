@@ -5,26 +5,26 @@ services:
     restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password
     networks:
-      - default
+      - server-network
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ecommerce
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_DATABASE=bradery
+    ports:
+      - 3306:3306
   cache:
     image: redis:latest
     restart: unless-stopped
     networks:
-      - default
+      - server-network
     ports:
       - 6379:6379
   backend:
     build: ./backend-service-ecommerce
     ports:
-      - 3001:3000
+      - 3001:3001
     restart: unless-stopped
     networks:
-      - default
+      - server-network
     depends_on:
       - db
       - cache
@@ -32,7 +32,7 @@ services:
       - TYPEORM_HOST=db
       - TYPEORM_PORT=3306
       - TYPEORM_USERNAME=root
-      - TYPEORM_PASSWORD=root
+      - TYPEORM_PASSWORD=
       - TYPEORM_DATABASE=bradery
       - REDIS_URL=redis://cache:6379
       - REDIS_HOST=cache
@@ -41,6 +41,8 @@ services:
     ports:
       - 3000:3000
     environment:
-      - API_URL=http://backend:3001
+      - REACT_APP_API_URL=http://localhost:3001
     networks:
-      - default
+      - server-network
+networks:
+  server-network:
